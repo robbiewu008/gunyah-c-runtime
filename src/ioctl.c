@@ -8,6 +8,7 @@
 #include <stdnoreturn.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>
+#include <stdarg.h>
 
 #include <arch_def.h>
 #include <errno.h>
@@ -38,4 +39,12 @@ sys_ioctl(unsigned int fd, unsigned int cmd, unsigned long arg)
 
 out:
 	return ret;
+}
+
+int ioctl(int fd, int request, ...) {
+    va_list ap;
+    va_start(ap, request);
+    unsigned long arg = va_arg(ap, unsigned long);
+    va_end(ap);
+    return (int)sys_ioctl((unsigned int)fd, (unsigned int)request, arg);
 }

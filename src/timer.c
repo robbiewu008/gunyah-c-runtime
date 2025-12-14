@@ -8,6 +8,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <time.h>
+#include <sys/types.h>
 
 #include <types.h>
 
@@ -20,6 +21,7 @@
 #include <platform_timer.h>
 #include <timer.h>
 #include <util.h>
+#include <syscall_defs.h>
 
 #define NS_PER_S 1000000000
 
@@ -131,4 +133,8 @@ timer_set_and_wait(bool relative, const struct timespec *req,
 	}
 out:
 	return ret;
+}
+
+int clock_nanosleep(int clock_id, int flags, const struct timespec *req, struct timespec *rem) {
+    return (int)sys_clock_nanosleep((long)clock_id, flags, req, rem);
 }

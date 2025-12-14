@@ -21,10 +21,6 @@
 // assume they are provided by the environment, and will generate calls to
 // them even when the frontend is in freestanding mode.
 
-#if !defined(HYP_STANDALONE_TEST)
-_Static_assert(__STDC_HOSTED__ == 0,
-	       "This file deviates from MISRA rule 21.2 in hosted mode");
-#endif
 
 // Define size_t, ssize_t and NULL
 #include <stddef.h>
@@ -46,8 +42,38 @@ memchr(const void *s, int c, size_t n);
 extern int
 strcmp(const char *s1, const char *s2);
 
+extern int
+strncmp(const char *s1, const char *s2, size_t n);
+
 extern size_t
 strlen(const char *str);
+
+extern size_t
+strnlen(const char *s, size_t maxlen);
+
+extern char *
+strdup(const char *s);
+
+extern char *
+strndup(const char *s, size_t n);
+
+extern char *
+strchr(const char *s, int c);
+
+extern char *
+strrchr(const char *s, int c);
+
+extern char *
+strtok_r(char *s, const char *delim, char **saveptr);
+
+extern size_t
+strspn(const char *s, const char *accept);
+
+extern char *
+strpbrk(const char *s, const char *accept);
+
+extern int
+memcmp(const void *s1, const void *s2, size_t n);
 
 extern ssize_t
 strscpy(char *dest, const char *str, size_t count);

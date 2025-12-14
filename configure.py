@@ -782,7 +782,7 @@ class SConsBuild(AbstractBuildGraph):
 
 if __name__ == '__main__':
     # Called stand-alone; generate a Ninja file.
-    import pipes
+    import shlex
     build = NinjaBuild('build.ninja',
                        arguments=dict(a.split('=', 1) for a in sys.argv[1:]))
-    build(gen_cmd=' '.join((pipes.quote(arg) for arg in sys.argv)))
+    build(gen_cmd=' '.join((shlex.quote(arg) for arg in sys.argv)))

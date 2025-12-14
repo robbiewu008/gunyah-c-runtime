@@ -20,6 +20,8 @@
 #include "device_tree.h"
 #include "mmap.h"
 
+extern unsigned long getauxval(unsigned long type);
+
 // FIXME: should we expose certain hw caps to app
 #define ELF_HWCAP (0x0)
 
@@ -215,4 +217,9 @@ elf_setup(void)
 	app_stack = (uintptr_t)stack;
 
 	return app_entry;
+}
+
+unsigned long getauxval(unsigned long type) {
+    (void)type;
+    return 0;
 }

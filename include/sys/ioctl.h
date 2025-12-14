@@ -27,3 +27,5 @@ struct tty_set_buffer_req {
 	uintptr_t buffer;
 	size_t	  size;
 };
+
+int ioctl(int fd, int request, ...);

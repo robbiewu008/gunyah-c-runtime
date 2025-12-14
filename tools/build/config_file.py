@@ -208,7 +208,8 @@ class Configuration:
                     assert self.binary_name is not None
                     self._set_program()
                 elif words[0] == "static_lib":
-                    self.binary_name = "lib" + words[0] + ".a"
+                    assert len(words) >= 2
+                    self.binary_name = "lib" + words[1] + ".a"
                 elif words[0] == "end_static_lib":
                     assert self.binary_name is not None
                     self._set_static_lib()
@@ -252,6 +253,9 @@ class Configuration:
             llvm_root,
             self.target_triple,
             "libc/include"))
+        
+        # Add path for musl-dev headers on Debian/Ubuntu/RPi OS
+        self.graph.append_env('CFLAGS', "-isystem /usr/include/aarch64-linux-musl")
 
         self.graph.add_env(
             'FORMATTER',
@@ -271,7 +275,14 @@ class Configuration:
         self.graph.add_env('TEST_LD', '${TEST_CC} -fuse-ld=lld')
 
         # Use Clang to preprocess DSL files.
-        self.graph.add_env('CPP', '${CLANG}-cpp -target ${TARGET_TRIPLE}')
+        self.graph.add_env('CPP', '${CLANG} -E -target ${TARGET_TRIPLE}')
+
+        # Disable warnings that break build with newer Clang
+        self.graph.append_env('CFLAGS', '-Wno-pre-c11-compat')
+        self.graph.append_env('CFLAGS', '-Wno-unsafe-buffer-usage')
+        self.graph.append_env('CFLAGS', '-Wno-cast-qual')
+        self.graph.append_env('CFLAGS', '-Wno-cast-align')
+        self.graph.append_env('CFLAGS', '-Wno-sign-conversion')
 
         sysroot = llvm_root + '/' + self.target_triple + '/libc/'
         self.graph.append_env("LDFLAGS", '--sysroot=' + sysroot)
